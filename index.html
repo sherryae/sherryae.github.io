@@ -1,112 +1,280 @@
-﻿<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>2022年我国人口与经济分析</title>
-<script type="text/javascript" src="js/jquery.js"></script>
-<link rel="stylesheet" href="css/comon0.css">
-</head>
-	<script>
-	$(window).load(function(){  
-             $(".loading").fadeOut()
-            })  
-			
-/****/
-$(document).ready(function(){
-	var whei=$(window).width()
-	$("html").css({fontSize:whei/20})
-	$(window).resize(function(){
-		var whei=$(window).width()
-	 $("html").css({fontSize:whei/20})
-});
-	});
-	</script>
-	<script type="text/javascript" src="js/echarts.min.js"></script> 
-	<script language="JavaScript" src="js/js.js"></script> 
-<body>
-<div class="canvas" style="opacity: .2">
-	<iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
-	</div>
-<div class="loading">
-  <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
-</div>
-<div class="head">
-  <h1><a href="color: white">2022年我国人口与经济分析</a></h1>
-  <div class="weather"><span id="showTime"></span></div>
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/dist/echarts.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl@1/dist/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat@1/dist/ecStat.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/dist/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/map/js/china.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/map/js/world.js"></script>
+       <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=5fOi76G3VILh271xSqcwakK2SCOTEnqN"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/dist/extension/bmap.min.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+var data = [
+     {name: '北京', value: 19},
+     {name: '天津', value: 12},
+     {name: '河北', value: 6},
+     {name: '山西', value: 7},
+     {name: '内蒙古', value: 10},
+     {name: '辽宁', value: 7},
+     {name: '吉林', value: 6},
+     {name: '黑龙江', value: 5},
+     {name: '上海', value: 18},
+     {name: '江苏', value: 14},
+     {name: '浙江', value: 12},
+     {name: '安徽', value: 7},
+     {name: '福建', value: 13},
+     {name: '江西', value: 7},
+     {name: '山东', value: 9},
+     {name: '河南', value: 6},
+     {name: '湖北', value: 9},
+     {name: '湖南', value: 7},
+     {name: '广东', value: 10},
+     {name: '广西', value: 5},
+     {name: '海南', value: 7},
+     {name: '重庆', value: 9},
+     {name: '承德', value: 25},
+     {name: '四川', value: 7},
+     {name: '贵州', value: 5},
+     {name: '云南', value: 6},
+     {name: '西藏', value: 6},
+     {name: '陕西', value: 8},
+     {name: '甘肃', value: 4},
+     {name: '青海', value: 6},
+     {name: '宁夏', value: 7},
+     {name: '新疆', value: 7},
+];
+var geoCoordMap = {
+    '北京':[116.403694,39.949459],
+    '天津':[117.286764,39.001295],
+    '河北':[114.508772,38.083783],
+    '山西':[112.595453,37.858034],
+    '内蒙古':[111.785972,40.849642],
+    '辽宁':[123.486653,41.682522],
+    '吉林':[125.326383,43.797768],
+    '黑龙江':[126.522207,45.801617],
+    '上海':[121.518142,31.211845],
+    '江苏':[118.832137,32.038322],
+    '浙江':[120.211934,30.274265],
+    '安徽':[117.194778,31.86577],
+    '福建':[119.292069,26.144144],
+    '江西':[115.851775,28.672488],
+    '山东':[117.194778,36.652148],
+    '河南':[113.644099,34.769161],
+    '湖北':[114.361594,30.601078],
+    '湖南':[112.926605,28.217167],
+    '广东':[113.239359,23.185545],
+    '广西':[108.345678,22.861984],
+    '海南':[110.350983,19.968035],
+    '重庆':[106.553263,29.556681],
+    '四川':[104.132697,30.561282],
+    '贵州':[106.616332,26.707352],
+    '云南':[102.881681,24.866897],
+    '西藏':[91.144205,29.649484],
+    '陕西':[109.026378,34.350591],
+    '甘肃':[103.856737,36.094212],
+    '青海':[101.851432,36.622494],
+    '宁夏':[106.257585,38.482579],
+    '新疆':[87.667116,43.817754]
+};
 
+var convertData = function (data) {
+    var res = [];
+    for (var i = 0; i < data.length; i++) {
+        var geoCoord = geoCoordMap[data[i].name];
+        if (geoCoord) {
+            res.push({
+                name: data[i].name,
+                value: geoCoord.concat(data[i].value)
+            });
+        }
+    }
+    return res;
+};
 
-	
-	
-</div>
-<div class="mainbox">
-  <ul class="clearfix">
-    <li>
-      <div class="boxall" style="height: 3.2rem">
-        <div class="alltitle">近五年我国人口与生产总值</div>
-        <div class="allnav" id="echart1"></div>
-        <div class="boxfoot"></div>
-      </div>
-      <div class="boxall" style="height: 3.2rem">
-        <div class="alltitle">近五年我国年龄结构</div>
-        <div class="allnav" id="echart2"></div>
-        <div class="boxfoot"></div>
-      </div>
-      <div class="boxall" style="height: 3.2rem">
-        <div style="height:100%; width: 100%;">
-		  	<div class="sy" id="fb1"></div>
-				<div class="sy" id="fb2"></div>
-				<div class="sy" id="fb3"></div>
-		  </div>
-        <div class="boxfoot">
-
-		  </div>
-      </div>
-    </li>
-    <li>
-      <div class="bar">
-        <div class="barbox">
-          <ul class="clearfix">
-            <li class="pulll_left counter">141175</li>
-            <li class="pulll_left counter">1210207</li>
-          </ul>
-        </div>
-        <div class="barbox2">
-          <ul class="clearfix">
-            <li class="pulll_left">全国总人口（万人） </li>
-            <li class="pulll_left">国内生产总值(亿元)</li>
-          </ul>
-        </div>
-      </div>
-      <div class="map">
-        <div class="map1"><img src="picture/lbx.png"></div>
-        <div class="map2"><img src="picture/jt.png"></div>
-        <div class="map3"><img src="picture/map.png"></div>
-        <div class="map4" id="map_1"></div>
-      </div>
-    </li>
-    <li>
-          <div class="boxall" style="height:3.4rem">
-        <div class="alltitle">近五年我国产业结构</div>
-        <div class="allnav" id="echart4"></div>
-        <div class="boxfoot"></div>
-      </div>
-      <div class="boxall" style="height: 3.2rem">
-        <div class="alltitle">2022年我国人均GDP TOP10（万元/人）</div>
-        <div class="allnav" id="echart5"></div>
-        <div class="boxfoot"></div>
-      </div>
-
-        <div class="alltitle"></div>
-        <div class="allnav" id="echart6"></div>
-        <div class="boxfoot"></div>
-      </div>
-    </li>
-  </ul>
-</div>
-<div class="back"></div>
-
-
-<script type="text/javascript" src="js/china.js"></script> 
-<script type="text/javascript" src="js/area_echarts.js"></script> 
-</body>
+option = {
+    title: {
+        text: '2022年32省人均生产总值 - 百度地图',
+        subtext: 'data from 国家统计局',
+        sublink: 'https://data.stats.gov.cn',
+        left: 'center'
+    },
+    tooltip : {
+        trigger: 'item'
+    },
+    bmap: {
+        center: [104.114129, 37.550339],
+        zoom: 5,
+        roam: true,
+        mapStyle: {
+            styleJson: [{
+                'featureType': 'water',
+                'elementType': 'all',
+                'stylers': {
+                    'color': '#d1d1d1'
+                }
+            }, {
+                'featureType': 'land',
+                'elementType': 'all',
+                'stylers': {
+                    'color': '#f3f3f3'
+                }
+            }, {
+                'featureType': 'railway',
+                'elementType': 'all',
+                'stylers': {
+                    'visibility': 'off'
+                }
+            }, {
+                'featureType': 'highway',
+                'elementType': 'all',
+                'stylers': {
+                    'color': '#fdfdfd'
+                }
+            }, {
+                'featureType': 'highway',
+                'elementType': 'labels',
+                'stylers': {
+                    'visibility': 'off'
+                }
+            }, {
+                'featureType': 'arterial',
+                'elementType': 'geometry',
+                'stylers': {
+                    'color': '#fefefe'
+                }
+            }, {
+                'featureType': 'arterial',
+                'elementType': 'geometry.fill',
+                'stylers': {
+                    'color': '#fefefe'
+                }
+            }, {
+                'featureType': 'poi',
+                'elementType': 'all',
+                'stylers': {
+                    'visibility': 'off'
+                }
+            }, {
+                'featureType': 'green',
+                'elementType': 'all',
+                'stylers': {
+                    'visibility': 'off'
+                }
+            }, {
+                'featureType': 'subway',
+                'elementType': 'all',
+                'stylers': {
+                    'visibility': 'off'
+                }
+            }, {
+                'featureType': 'manmade',
+                'elementType': 'all',
+                'stylers': {
+                    'color': '#d1d1d1'
+                }
+            }, {
+                'featureType': 'local',
+                'elementType': 'all',
+                'stylers': {
+                    'color': '#d1d1d1'
+                }
+            }, {
+                'featureType': 'arterial',
+                'elementType': 'labels',
+                'stylers': {
+                    'visibility': 'off'
+                }
+            }, {
+                'featureType': 'boundary',
+                'elementType': 'all',
+                'stylers': {
+                    'color': '#fefefe'
+                }
+            }, {
+                'featureType': 'building',
+                'elementType': 'all',
+                'stylers': {
+                    'color': '#d1d1d1'
+                }
+            }, {
+                'featureType': 'label',
+                'elementType': 'labels.text.fill',
+                'stylers': {
+                    'color': '#999999'
+                }
+            }]
+        }
+    },
+    series : [
+        {
+            name: '人均生产总值（万元/人）',
+            type: 'scatter',
+            coordinateSystem: 'bmap',
+            data: convertData(data),
+            symbolSize: function (val) {
+                return val[2] ;
+            },
+            encode: {
+                value: 2
+            },
+            label: {
+                formatter: '{b}',
+                position: 'right',
+                show: false
+            },
+            itemStyle: {
+                color: 'purple'
+            },
+            emphasis: {
+                label: {
+                    show: true
+                }
+            }
+        },
+        {
+            name: 'Top 5',
+            type: 'effectScatter',
+            coordinateSystem: 'bmap',
+            data: convertData(data.sort(function (a, b) {
+                return b.value - a.value;
+            }).slice(0, 6)),
+            symbolSize: function (val) {
+                return val[2];
+            },
+            encode: {
+                value: 2
+            },
+            showEffectOn: 'render',
+            rippleEffect: {
+                brushType: 'stroke'
+            },
+            hoverAnimation: true,
+            label: {
+                formatter: '{b}',
+                position: 'right',
+                show: true
+            },
+            itemStyle: {
+                color: 'purple',
+                shadowBlur: 10,
+                shadowColor: '#333'
+            },
+            zlevel: 1
+        }
+    ]
+};;
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+       </script>
+   </body>
 </html>
